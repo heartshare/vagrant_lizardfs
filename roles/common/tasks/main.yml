@@ -1,19 +1,17 @@
-  - name: install ssh key
-    authorized_key: user=vagrant 
-                    key="{{ lookup('file', '/home/vagrant/.ssh/id_rsa.pub') }}" 
-                    state=present
+- name: install ssh key
+  authorized_key: user=vagrant key="{{ lookup('file', '/home/vagrant/.ssh/id_rsa.pub') }}" state=present
+  
+- name: add mfs group
+  group: name=mfs state=present
+  
+- name: add user mfs 
+  user: name=mfs comment=Lizardfs_user group=mfs shell=/sbin/nologin createhome=no
 
-  - name: add mfs group
-    group: name=mfs state=present
+- name: add lizardfs apt key
+  apt_key: url=http://packages.lizardfs.com/lizardfs.key state=present
 
-  - name: add user mfs 
-    user: name=mfs comment=Lizardfs_user group=mfs shell=/sbin/nologin createhome=no
-
-  - name: add lizardfs apt key
-    apt_key: url=http://packages.lizardfs.com/lizardfs.key state=present
-
-  - name: add lizardfs repository
-    apt_repository: repo='deb http://packages.lizardfs.com/ubuntu/trusty trusty main' state=present
-
-  - name: add lizardfs repository
-    apt_repository: repo='deb-src http://packages.lizardfs.com/ubuntu/trusty trusty main' state=present
+- name: add lizardfs repository
+  apt_repository: repo='deb http://packages.lizardfs.com/ubuntu/trusty trusty main' state=present
+  
+- name: add lizardfs repository
+  apt_repository: repo='deb-src http://packages.lizardfs.com/ubuntu/trusty trusty main' state=present
