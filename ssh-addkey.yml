@@ -26,18 +26,6 @@
   - name: add lizardfs repository
     apt_repository: repo='deb-src http://packages.lizardfs.com/ubuntu/trusty trusty main' state=present
 
-
-- hosts: master
-  sudo: yes
-  gather_facts: no
-  remote_user: vagrant
-
-  tasks:
-
-  - name: apt update and install lizardfs-master
-    apt: name=lizardfs-master update_cache=yes
-
-
 - hosts: shadow
   sudo: yes
   gather_facts: no

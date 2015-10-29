@@ -1,0 +1,25 @@
+  - name: apt update and install lizardfs-master
+    apt: name=lizardfs-master update_cache=yes
+
+  - name: mfs cfg files
+    copy: src=files/mfsmaster.cfg dest=/etc/mfs/mfsmaster.cfg owner=root group=root mode=0644
+
+  - name: mfs cfg files
+    copy: src=files/mfsexports.cfg dest=/etc/mfs/mfsexports.cfg owner=root group=root mode=0644
+
+  - name: mfs cfg files
+    copy: src=files/mfsgoals.cfg dest=/etc/mfs/mfsgoals.cfg owner=root group=root mode=0644
+
+  - name: mfs cfg files
+    copy: src=files/mfstopology.cfg dest=/etc/mfs/mfstopology.cfg owner=root group=root mode=0644
+
+  - name: /var/lib/mfs
+    file: path=/var/lib/mfs owner=mfs group=mfs mode=0755
+
+  - name: lizardfs-master file
+    copy: src=files/lizardfs-master dest=/etc/default/lizardfs-master owner=root group=root mode=0644
+
+  - name: lizardfs-master service
+    service: name=lizardfs-master state=started
+  
+                
