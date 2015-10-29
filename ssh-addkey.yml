@@ -1,0 +1,81 @@
+---
+- hosts: all
+  sudo: yes
+  gather_facts: no
+  remote_user: vagrant
+
+  tasks:
+
+  - name: install ssh key
+    authorized_key: user=vagrant 
+                    key="{{ lookup('file', '/home/vagrant/.ssh/id_rsa.pub') }}" 
+                    state=present
+
+  - name: add mfs group
+    group: name=mfs state=present
+
+  - name: add user mfs 
+    user: name=mfs comment=Lizardfs_user group=mfs shell=/sbin/nologin createhome=no
+
+  - name: add lizardfs apt key
+    apt_key: url=http://packages.lizardfs.com/lizardfs.key state=present
+
+  - name: add lizardfs repository
+    apt_repository: repo='deb http://packages.lizardfs.com/ubuntu/trusty trusty main' state=present
+
+  - name: add lizardfs repository
+    apt_repository: repo='deb-src http://packages.lizardfs.com/ubuntu/trusty trusty main' state=present
+
+
+- hosts: master
+  sudo: yes
+  gather_facts: no
+  remote_user: vagrant
+
+  tasks:
+
+  - name: apt update and install lizardfs-master
+    apt: name=lizardfs-master update_cache=yes
+
+
+- hosts: shadow
+  sudo: yes
+  gather_facts: no
+  remote_user: vagrant
+
+  tasks:
+
+  - name: apt update and install lizardfs-master
+    apt: name=lizardfs-master update_cache=yes
+
+
+- hosts: chunk
+  sudo: yes
+  gather_facts: no
+  remote_user: vagrant
+
+  tasks:
+
+  - name: apt update and install lizardfs-chunkserver
+    apt: name=lizardfs-chunkserver update_cache=yes
+
+
+- hosts: meta
+  sudo: yes
+  gather_facts: no
+  remote_user: vagrant
+
+  tasks:
+
+  - name: apt update and install lizardfs-metalogger
+    apt: name=lizardfs-metalogger update_cache=yes
+
+- hosts: cgi
+  sudo: yes
+  gather_facts: no
+  remote_user: vagrant
+
+  tasks:
+
+  - name: apt update and install lizardfs-cgiserv
+    apt: name=lizardfs-cgiserv update_cache=yes
