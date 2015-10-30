@@ -1,10 +1,10 @@
-- hosts: all
-  sudo: yes
-  gather_facts: no
-  remote_user: vagrant
+# - hosts: all
+#   sudo: yes
+#   gather_facts: no
+#   remote_user: vagrant
   
-  roles:
-    - common
+#   roles:
+#     - common
 
 - hosts: master
   sudo: yes
@@ -45,4 +45,12 @@
   
   roles:
     - cgi
+    
+- hosts: client
+  sudo: yes
+  gather_facts: no
+  remote_user: vagrant
+  
+  roles:
+    - client
     
