@@ -1,0 +1,8 @@
+- hosts: cgi
+  sudo: yes
+  gather_facts: no
+  remote_user: vagrant
+  
+  roles:
+    - cgi
+    
