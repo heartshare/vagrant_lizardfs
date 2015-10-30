@@ -11,8 +11,19 @@
 - name: Get disks
   set_fact: disk_var="{{hostvars[inventory_hostname]["ansible_devices"].keys()|list}}"
 
+- name: mfshdd file disk list
+  lineinfile: dest=/etc/mfs/mfshdd.cfg line="/mnt/{{ item }}"
+  with_items: disk_var
+  when: item != 'sda'
+
 - name: /mnt/disk dir
-  file: path=/mnt/{{ item }} state=directory owner=mfs group=mfs mode=0755 recurse=yes
+  file: path=/mnt/{{ item }} state=directory recurse=yes
+  with_items: disk_var
+  when: item != 'sda'
+
+  ## somehow the first run doesn't get it, add the second
+- name: /mnt/disk dir ownership
+  file: path=/mnt/{{ item }} owner=mfs group=mfs mode=0755 
   with_items: disk_var
   when: item != 'sda'
 
@@ -21,7 +32,7 @@
   with_items: disk_var
   when: item != 'sda'
   register: device_stat
-  
+
 - name: Create GPT partition table
   command: /sbin/parted -s /dev/{{ item.item }} mklabel gpt
   with_items: device_stat.results

@@ -1,0 +1,8 @@
+- hosts: client
+  sudo: yes
+  gather_facts: no
+  remote_user: vagrant
+  
+  roles:
+    - client
+    
