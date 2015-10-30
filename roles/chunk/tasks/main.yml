@@ -6,17 +6,18 @@
   with_items:
     - { src: 'mfschunkserver.cfg', dest: '/etc/mfs/mfschunkserver.cfg' }
     - { src: 'mfshdd.cfg', dest: '/etc/mfs/mfshdd.cfg' }
-
+    - { src: 'lizardfs-chunkserver', dest: '/etc/default/lizardfs-chunkserver' }
+    
 - name: Get disks
   set_fact: disk_var="{{hostvars[inventory_hostname]["ansible_devices"].keys()|list}}"
 
 - name: /mnt/disk dir
-  file: path=/mnt/{{item}} state=directory owner=mfs group=mfs mode=0755
+  file: path=/mnt/{{ item }} state=directory owner=mfs group=mfs mode=0755 recurse=yes
   with_items: disk_var
   when: item != 'sda'
 
 - name: Check if the disk is partitioned and also ignore sda
-  stat: path=/dev/{{item}}1
+  stat: path=/dev/{{ item }}1
   with_items: disk_var
   when: item != 'sda'
   register: device_stat
@@ -36,7 +37,7 @@
     - item.stat.exists == false
 
 - name: mkfs
-  filesystem: fstype=ext4 dev=/dev/{{item}}1
+  filesystem: fstype=ext4 dev=/dev/{{ item }}1
   with_items: disk_var
   when: item != 'sda'
   
@@ -45,6 +46,7 @@
   with_items: disk_var
   when: item != 'sda'
 
-
+- name: lizardfs-chunkserver service
+  service: name=lizardfs-chunkserver state=started
 
 
