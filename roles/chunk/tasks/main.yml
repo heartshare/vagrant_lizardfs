@@ -17,13 +17,7 @@
   when: item != 'sda'
 
 - name: /mnt/disk dir
-  file: path=/mnt/{{ item }} state=directory recurse=yes
-  with_items: disk_var
-  when: item != 'sda'
-
-  ## somehow the first run doesn't get it, add the second
-- name: /mnt/disk dir ownership
-  file: path=/mnt/{{ item }} owner=mfs group=mfs mode=0755 
+  file: path=/mnt/{{ item }} state=directory owner=mfs group=mfs recurse=yes
   with_items: disk_var
   when: item != 'sda'
 
@@ -54,6 +48,11 @@
   
 - name: check mount of disk
   mount: name=/mnt/{{ item }} src=/dev/{{ item }}1 fstype=ext4 state=mounted
+  with_items: disk_var
+  when: item != 'sda'
+
+- name: /mnt/disk dir ownership after mount
+  file: path=/mnt/{{ item }} state=directory owner=mfs group=mfs recurse=yes
   with_items: disk_var
   when: item != 'sda'
 
