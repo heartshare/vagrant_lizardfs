@@ -14,7 +14,7 @@
     copy: src=mfstopology.cfg dest=/etc/mfs/mfstopology.cfg owner=root group=root mode=0644
 
   - name: /var/lib/mfs
-    file: path=/var/lib/mfs owner=mfs group=mfs mode=0755
+    file: path=/var/lib/mfs state=directory owner=mfs group=mfs mode=0755
 
   - name: /var/lib/mfs/metadata.mfs
     copy: src=metadata.mfs dest=/var/lib/mfs/metadata.mfs owner=mfs group=mfs mode=0644

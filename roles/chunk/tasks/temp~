@@ -1,0 +1,23 @@
+- name: if disk label not exist
+  command: parted -s /dev/sdb print 2
+  register: sdblabel
+  changed_when: ' "unrecognised disk label" in sdblabel.stdout'
+
+- name: make disk label
+  command: parted -s /dev/sdb mklabel gpt
+  when: ' "unrecognised disk label" in sdblabel.stdout'
+  
+- name: if partition not exist
+  command: parted -s {{ item }} print 2
+  register: sdbpart
+  changed_when: ' "exist." in sdbpart.stdout'
+  with_items:
+    - /dev/sdb
+    - /dev/sdc
+
+- name: make partition
+  command: parted -s {{ item }} mkpart primary xfs 0% 100%
+  when: ' "exist." in sdbpart.stdout'
+  with_items:
+    - /dev/sdb
+    - /dev/sdc

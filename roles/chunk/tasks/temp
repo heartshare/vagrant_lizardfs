@@ -1,0 +1,46 @@
+- name: if disk label not exist
+  command: parted -s /dev/sdb print 2
+  register: sdblabel
+  changed_when: ' "unrecognised disk label" in sdblabel.stdout'
+
+- name: make disk label
+  command: parted -s /dev/sdb mklabel gpt
+  when: ' "unrecognised disk label" in sdblabel.stdout'
+  
+- name: if partition not exist
+  command: parted -s {{ item }} print 2
+  register: sdbpart
+  changed_when: ' "exist." in sdbpart.stdout'
+  with_items:
+    - /dev/sdb
+    - /dev/sdc
+
+- name: make partition
+  command: parted -s {{ item }} mkpart primary xfs 0% 100%
+  when: ' "exist." in sdbpart.stdout'
+  with_items:
+    - /dev/sdb
+    - /dev/sdc
+
+
+                    
+- name: Get disks
+  set_fact: disk_var="{{hostvars[inventory_hostname]["ansible_devices"].keys()|list}}"
+
+- name: /mnt/disk dir
+  file: path=/mnt/{{item}} state=directory owner=mfs group=mfs mode=0755
+  with_items: disk_var
+  when: item != 'sda'
+
+- name: Check if the disk is partitioned and also ignore sda
+  stat: path=/dev/{{item}}1
+  with_items: disk_var
+  when: item != 'sda'
+  register: device_stat
+  
+- name: Create GPT partition table
+  command: /sbin/parted -s /dev/{{ item.item }} mklabel gpt
+  with_items: device_stat.results
+  when:
+    - not item | skipped
+    - item.stat.exists == false

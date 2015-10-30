@@ -1,0 +1,7 @@
+- hosts: chunk
+  sudo: yes
+  gather_facts: yes
+  remote_user: vagrant
+
+  roles:
+    - chunk

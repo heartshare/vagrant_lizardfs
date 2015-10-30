@@ -1,5 +1,8 @@
 - name: install ssh key
   authorized_key: user=vagrant key="{{ lookup('file', '/home/vagrant/.ssh/id_rsa.pub') }}" state=present
+
+- name: /etc/hosts
+  copy: src=/etc/hosts dest=/etc/hosts owner=root group=root mode=0644
   
 - name: add mfs group
   group: name=mfs state=present

@@ -1,0 +1,50 @@
+- name: apt update and install lizardfs-chunkserver
+  apt: name=lizardfs-chunkserver update_cache=yes
+
+- name: chunk cfg file
+  copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
+  with_items:
+    - { src: 'mfschunkserver.cfg', dest: '/etc/mfs/mfschunkserver.cfg' }
+    - { src: 'mfshdd.cfg', dest: '/etc/mfs/mfshdd.cfg' }
+
+- name: Get disks
+  set_fact: disk_var="{{hostvars[inventory_hostname]["ansible_devices"].keys()|list}}"
+
+- name: /mnt/disk dir
+  file: path=/mnt/{{item}} state=directory owner=mfs group=mfs mode=0755
+  with_items: disk_var
+  when: item != 'sda'
+
+- name: Check if the disk is partitioned and also ignore sda
+  stat: path=/dev/{{item}}1
+  with_items: disk_var
+  when: item != 'sda'
+  register: device_stat
+  
+- name: Create GPT partition table
+  command: /sbin/parted -s /dev/{{ item.item }} mklabel gpt
+  with_items: device_stat.results
+  when:
+    - not item | skipped
+    - item.stat.exists == false
+
+- name: mkpart
+  command: /sbin/parted -s /dev/{{ item.item }} mkpart primary ext4 0% 100%
+  with_items: device_stat.results
+  when:
+    - not item | skipped
+    - item.stat.exists == false
+
+- name: mkfs
+  filesystem: fstype=ext4 dev=/dev/{{item}}1
+  with_items: disk_var
+  when: item != 'sda'
+  
+- name: check mount of disk
+  mount: name=/mnt/{{ item }} src=/dev/{{ item }}1 fstype=ext4 state=mounted
+  with_items: disk_var
+  when: item != 'sda'
+
+
+
+
