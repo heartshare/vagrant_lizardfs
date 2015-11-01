@@ -46,10 +46,10 @@
     register: serv
     ignore_errors: yes
     
-#  - debug: var=serv
+  - debug: var=serv
 
   - command: "{{ item }}"
-    when: ( serv.skipped is not defined ) and ( result.rc==1 )
+    when: ( serv.name is not defined ) and ( result.rc == 1 )
     with_items:
       - "mfsmetarestore -a"
       - "/etc/init.d/lizardfs-master start"
