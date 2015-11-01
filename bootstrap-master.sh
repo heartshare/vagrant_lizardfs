@@ -21,7 +21,8 @@ cat >> /etc/hosts <<EOL
 10.0.15.21  chunk1
 10.0.15.22  chunk2
 EOL
-apt-get install pdsh
+
+apt-get install pdsh -y
 
 cat > /etc/profile.d/pdsh.sh <<EOF
 # setup pdsh for cluster users
