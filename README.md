@@ -53,4 +53,6 @@ cgi: 52428800 bytes (52 MB) copied, 2.02597 s, 25.9 MB/s
 visit lizardfs gui monotor at:
 http://10.0.15.16:9425/mfs.cgi?masterhost=mfsmaster
 
+master -> shadow failover is managed by keepalived
+
 ```
