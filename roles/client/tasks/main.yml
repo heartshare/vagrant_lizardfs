@@ -1,5 +1,5 @@
 - name: apt update and install lizardfs-client
-  apt: name=lizardfs-client update_cache=yes
+  apt: name=lizardfs-client update_cache=no
 
 - name: /mnt/lizardfs dir
   file: path=/mnt/lizardfs state=directory

@@ -1,5 +1,5 @@
 - name: apt update and install lizardfs-chunkserver
-  apt: name=lizardfs-chunkserver update_cache=yes
+  apt: name=lizardfs-chunkserver update_cache=no
 
 - name: chunk cfg file
   copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644

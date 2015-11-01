@@ -13,7 +13,14 @@
   
   roles:
     - master
-    
+
+- hosts: shadow
+  sudo: yes
+  gather_facts: no
+  remote_user: vagrant
+  
+  roles:
+    - shadow
 
 - hosts: chunk
   sudo: yes
@@ -30,14 +37,6 @@
   
   roles:
     - meta
-
-- hosts: shadow
-  sudo: yes
-  gather_facts: no
-  remote_user: vagrant
-  
-  roles:
-    - shadow
 
 - hosts: cgi
   sudo: yes

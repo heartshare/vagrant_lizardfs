@@ -1,5 +1,5 @@
   - name: install lizardfs-master,keepalived
-    apt: name={{ item }} update_cache=yes
+    apt: name={{ item }} update_cache=no
     with_items:
       - lizardfs-master
       - keepalived
