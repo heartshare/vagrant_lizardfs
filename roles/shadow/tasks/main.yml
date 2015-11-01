@@ -18,7 +18,11 @@
       - { src: 'mfstopology.cfg', dest: '/etc/mfs/mfstopology.cfg' }
       - { src: 'lizardfs-master', dest: '/etc/default/lizardfs-master' }
       - { src: 'keepalived.conf', dest: '/etc/keepalived/keepalived.conf' }
-      - { src: 'master-restore.sh', dest: '/etc/keepalived/master-resore.sh' }
+
+
+  - copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0755
+    with_items:
+      - { src: 'master-failover.sh', dest: '/etc/keepalived/master-failover.sh' }
 
   - service: name=keepalived state=started
       
@@ -45,7 +49,7 @@
 #  - debug: var=serv
 
   - command: "{{ item }}"
-    when: serv.skipped is not defined
+    when: ( serv.skipped is not defined ) and ( result.rc==1 )
     with_items:
       - "mfsmetarestore -a"
       - "/etc/init.d/lizardfs-master start"
