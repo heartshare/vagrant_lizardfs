@@ -5,7 +5,7 @@
 git clone this repository
 
 $vagrant up
-$vagrant ssh mfsmaster
+$vagrant ssh master
 
 $cd /vagrant; ./ssh.sh
 $ansible-playbook role-common.yml --ask-pass (passwd:vagrant)

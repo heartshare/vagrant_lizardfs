@@ -4,14 +4,14 @@
 Vagrant.configure("2") do |config|
 
   # create master
-  config.vm.define :mfsmaster do |mfsmaster_config|
-      mfsmaster_config.vm.box = "ubuntu/trusty64"
-      mfsmaster_config.vm.hostname = "mfsmaster"
-      mfsmaster_config.vm.network :private_network, ip: "10.0.15.10"
-      mfsmaster_config.vm.provider "virtualbox" do |vb|
+  config.vm.define :master do |master_config|
+      master_config.vm.box = "ubuntu/trusty64"
+      master_config.vm.hostname = "master"
+      master_config.vm.network :private_network, ip: "10.0.15.10"
+      master_config.vm.provider "virtualbox" do |vb|
         vb.memory = "256"
       end
-      mfsmaster_config.vm.provision :shell, path: "bootstrap-mfsmaster.sh"
+      master_config.vm.provision :shell, path: "bootstrap-master.sh"
   end
 
   # create some chunk servers, each with two additional disks
