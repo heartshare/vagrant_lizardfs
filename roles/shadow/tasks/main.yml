@@ -41,6 +41,7 @@
     register: result
     failed_when: result.rc is not defined
 
+    
   - service: name=lizardfs-master state=started
     when: result.rc==1
     register: serv
@@ -53,6 +54,12 @@
     with_items:
       - "mfsmetarestore -a"
       - "/etc/init.d/lizardfs-master start"
+
+  - command: "{{ item }}"
+    ignore_errors: yes
+    with_items:
+      - "sed -i 's+PERSONALITY = master+PERSONALITY = shadow+g' /etc/mfs/mfsmaster.cfg"
+      - "mfsmaster restart"
 
   
                 
