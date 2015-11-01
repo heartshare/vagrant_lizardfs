@@ -2,7 +2,7 @@
   authorized_key: user=vagrant key="{{ lookup('file', '/home/vagrant/.ssh/id_rsa.pub') }}" state=present
 
 - name: /etc/hosts has mfsmaster
-  lineinfile: dest=/etc/hosts line="10.0.15.10  mfsmaster"
+  lineinfile: dest=/etc/hosts line="10.0.15.12 mfsmaster"
   
 - name: add mfs group
   group: name=mfs state=present

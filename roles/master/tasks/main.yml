@@ -1,7 +1,15 @@
-  - name: apt update and install lizardfs-master
-    apt: name=lizardfs-master update_cache=yes
+  - name: install lizardfs-master,keepalived
+    apt: name={{ item }} update_cache=yes
+    with_items:
+      - lizardfs-master
+      - keepalived
 
-  - name: mfs cfg files
+  - lineinfile: dest=/etc/sysctl.conf line="net.ipv4.ip_nonlocal_bind = 1"
+
+  - name: enable virtual ip binding
+    command: sysctl -p
+      
+  - name: mfs cfg keepalived files
     copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
     with_items:
       - { src: 'mfsmaster.cfg', dest: '/etc/mfs/mfsmaster.cfg' }
@@ -9,14 +17,38 @@
       - { src: 'mfsgoals.cfg', dest: '/etc/mfs/mfsgoals.cfg' }
       - { src: 'mfstopology.cfg', dest: '/etc/mfs/mfstopology.cfg' }
       - { src: 'lizardfs-master', dest: '/etc/default/lizardfs-master' }
-    
+      - { src: 'keepalived.conf', dest: '/etc/keepalived/keepalived.conf' }
+      - { src: 'master-restore.sh', dest: '/etc/keepalived/master-resore.sh' }
+
+  - service: name=keepalived state=started
+      
   - name: /var/lib/mfs
     file: path=/var/lib/mfs state=directory owner=mfs group=mfs mode=0755
 
+  - stat: path=/var/lib/mfs/metadata.mfs
+    register: metadata
+        
   - name: /var/lib/mfs/metadata.mfs
     copy: src=metadata.mfs dest=/var/lib/mfs/metadata.mfs owner=mfs group=mfs mode=0644
+    when: metadata.stat.exists==false
+
+  - name: check pid mfsmaster
+    command: pidof mfsmaster
+    register: result
+    failed_when: result.rc is not defined
+
+  - service: name=lizardfs-master state=started
+    when: result.rc==1
+    register: serv
+    ignore_errors: yes
     
-  - name: lizardfs-master service
-    service: name=lizardfs-master state=started
+#  - debug: var=serv
+
+  - command: "{{ item }}"
+    when: serv.skipped is not defined
+    with_items:
+      - "mfsmetarestore -a"
+      - "/etc/init.d/lizardfs-master start"
+
   
                 
