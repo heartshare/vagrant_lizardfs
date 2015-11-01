@@ -14,8 +14,7 @@ apt-get -y install ansible
 cat >> /etc/hosts <<EOL
 
 # vagrant environment nodes
-10.0.15.12  mfsmaster
-10.0.15.10  master
+10.0.15.10  master # mfsmaster is virtual ip xxxx.15.12 
 10.0.15.11  shadow
 10.0.15.15  meta
 10.0.15.16  cgi
