@@ -53,26 +53,26 @@ Vagrant.configure("2") do |config|
       end
   end
 
-  # create metalogger
-  config.vm.define :meta do |meta_config|
-    meta_config.vm.box = "ubuntu/trusty64"
-    meta_config.vm.hostname = "meta"
-    meta_config.vm.network :private_network, ip: "10.0.15.15"
-    #      meta_config.vm.network "forwarded_port", guest: 80, host: 8080
-    meta_config.vm.provider "virtualbox" do |vb|
-      vb.memory = "256"
-    end
-  end
+  # # create metalogger
+  # config.vm.define :meta do |meta_config|
+  #   meta_config.vm.box = "ubuntu/trusty64"
+  #   meta_config.vm.hostname = "meta"
+  #   meta_config.vm.network :private_network, ip: "10.0.15.15"
+  #   #      meta_config.vm.network "forwarded_port", guest: 80, host: 8080
+  #   meta_config.vm.provider "virtualbox" do |vb|
+  #     vb.memory = "256"
+  #   end
+  # end
 
-  # create cgi server
-  config.vm.define :cgi do |cgi_config|
-    cgi_config.vm.box = "ubuntu/trusty64"
-    cgi_config.vm.hostname = "cgi"
-    cgi_config.vm.network :private_network, ip: "10.0.15.16"
-    #      cgi_config.vm.network "forwarded_port", guest: 80, host: 8080
-    cgi_config.vm.provider "virtualbox" do |vb|
-      vb.memory = "256"
-    end
-  end
+  # # create cgi server
+  # config.vm.define :cgi do |cgi_config|
+  #   cgi_config.vm.box = "ubuntu/trusty64"
+  #   cgi_config.vm.hostname = "cgi"
+  #   cgi_config.vm.network :private_network, ip: "10.0.15.16"
+  #   #      cgi_config.vm.network "forwarded_port", guest: 80, host: 8080
+  #   cgi_config.vm.provider "virtualbox" do |vb|
+  #     vb.memory = "256"
+  #   end
+  # end
   
 end
