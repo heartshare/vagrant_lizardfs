@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
       master_config.vm.hostname = "master"
       master_config.vm.network :private_network, ip: "10.0.15.10"
       master_config.vm.provider "virtualbox" do |vb|
-        vb.memory = "256"
+        vb.memory = "512"
       end
       master_config.vm.provision :shell, path: "bootstrap-master.sh"
   end
@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
         node.vm.network :private_network, ip: "10.0.15.2#{i}"
  #       node.vm.network "forwarded_port", guest: 80, host: "808#{i}"
         node.vm.provider "virtualbox" do |vb|
-          vb.memory = "256"
+          vb.memory = "512"
           (0..1).each do |d|
             vb.customize ['createhd',
                           '--filename', "disk-#{i}-#{d}",
@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
       shadow_config.vm.network :private_network, ip: "10.0.15.11"
 #      shadow_config.vm.network "forwarded_port", guest: 80, host: 8080
       shadow_config.vm.provider "virtualbox" do |vb|
-        vb.memory = "256"
+        vb.memory = "512"
       end
   end
 
@@ -60,7 +60,7 @@ Vagrant.configure("2") do |config|
     meta_config.vm.network :private_network, ip: "10.0.15.15"
     #      meta_config.vm.network "forwarded_port", guest: 80, host: 8080
     meta_config.vm.provider "virtualbox" do |vb|
-      vb.memory = "256"
+      vb.memory = "512"
     end
   end
 
@@ -71,7 +71,7 @@ Vagrant.configure("2") do |config|
     cgi_config.vm.network :private_network, ip: "10.0.15.16"
     #      cgi_config.vm.network "forwarded_port", guest: 80, host: 8080
     cgi_config.vm.provider "virtualbox" do |vb|
-      vb.memory = "256"
+      vb.memory = "512"
     end
   end
   
