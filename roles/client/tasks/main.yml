@@ -7,4 +7,6 @@
 - name: mount lizardfs
   command: mfsmount /mnt/lizardfs
 
+- command: mfssetgoal 2 /mnt/lizardfs
+
   
