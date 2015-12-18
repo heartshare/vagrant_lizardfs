@@ -4,7 +4,7 @@ vrrp_instance vrrp_lizardfs_master_failover {
         virtual_router_id 51
         priority 100                    # 101 on master, 100 on backup
         virtual_ipaddress {
-            10.0.15.12/24 dev {{ lizardfs_interface }}
+            {{ mfsmaster_ip }}/24 dev {{ lizardfs_interface }}
         }
 	notify "/etc/keepalived/master-failover.sh"      
 }

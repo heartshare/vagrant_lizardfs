@@ -1,6 +1,6 @@
 # cgi server need to resolve all hosts for monitoring
 - name: /etc/hosts has mfsmaster
-  lineinfile: dest=/etc/hosts line="10.0.15.12 mfsmaster"
+  lineinfile: dest=/etc/hosts line="{{ mfsmaster_ip }} mfsmaster"
   
 - name: add mfs group
   group: name=mfs state=present
