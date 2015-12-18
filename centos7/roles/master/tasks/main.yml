@@ -1,0 +1,63 @@
+
+- name: install lizardfs-master
+  yum: name={{ item }}
+  with_fileglob:
+    - /usr/local/src/lizardfs-master*
+    
+- name: install keepalived
+  yum: name=keepalived update_cache=no
+
+- lineinfile: dest=/etc/sysctl.conf line="net.ipv4.ip_nonlocal_bind = 1"
+
+- name: enable virtual ip binding
+  command: sysctl -p
+      
+- name: mfs cfg files
+  copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
+  with_items:
+    - { src: 'mfsmaster.cfg', dest: '/etc/mfs/mfsmaster.cfg' }
+    - { src: 'mfsexports.cfg', dest: '/etc/mfs/mfsexports.cfg' }
+    - { src: 'mfsgoals.cfg', dest: '/etc/mfs/mfsgoals.cfg' }
+    - { src: 'mfstopology.cfg', dest: '/etc/mfs/mfstopology.cfg' }
+    - { src: 'lizardfs-master', dest: '/etc/default/lizardfs-master' }
+
+- name: keepalived conf
+  template: src=keepalived.conf.j2 dest=/etc/keepalived/keepalived.conf owner=root group=root mode=0644
+  notify:
+    - restart keepalived
+    
+- copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0755
+  with_items:
+    - { src: 'master-failover.sh', dest: '/etc/keepalived/master-failover.sh' }
+
+- service: name=keepalived state=started
+      
+- name: /var/lib/mfs
+  file: path=/var/lib/mfs state=directory owner=mfs group=mfs mode=0755
+
+- stat: path=/var/lib/mfs/metadata.mfs
+  register: metadata
+        
+- name: /var/lib/mfs/metadata.mfs
+  copy: src=metadata.mfs dest=/var/lib/mfs/metadata.mfs owner=mfs group=mfs mode=0644
+  when: metadata.stat.exists==false
+
+- name: check pid mfsmaster
+  command: pidof mfsmaster
+  register: result
+  failed_when: result.rc is not defined
+
+- service: name=lizardfs-master state=started
+  when: result.rc==1
+  register: serv
+  ignore_errors: yes
+    
+- debug: var=serv
+
+- command: "{{ item }}"
+  when: ( serv.name is not defined ) and ( result.rc == 1 )
+  with_items:
+    - "mfsmetarestore -a"
+    - "/etc/init.d/lizardfs-master start"
+  
+                

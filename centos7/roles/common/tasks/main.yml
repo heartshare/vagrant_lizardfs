@@ -1,0 +1,15 @@
+# cgi server need to resolve all hosts for monitoring
+- name: /etc/hosts has mfsmaster
+  lineinfile: dest=/etc/hosts line="10.0.15.12 mfsmaster"
+  
+- name: add mfs group
+  group: name=mfs state=present
+  
+- name: add user mfs 
+  user: name=mfs comment=Lizardfs_user group=mfs shell=/sbin/nologin createhome=no
+
+- name: copy lizard rpm to nodes
+  copy: src={{ item }} dest=/usr/local/src/
+  with_fileglob:
+    - /root/rpmbuild/RPMS/x86_64/lizardfs*.rpm
+

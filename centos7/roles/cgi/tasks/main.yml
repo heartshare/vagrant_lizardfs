@@ -1,0 +1,12 @@
+- name: apt update and install lizardfs-cgiserv
+  apt: name=lizardfs-cgiserv update_cache=no
+
+- name: cgi cfg file
+  copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
+  with_items:
+    - { src: 'lizardfs-cgiserv', dest: '/etc/default/lizardfs-cgiserv' }
+
+- name: start service lizardfs-cgiserv
+  service: name=lizardfs-cgiserv state=started
+
+  
