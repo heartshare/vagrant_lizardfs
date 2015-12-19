@@ -24,7 +24,7 @@
 - name: keepalived conf
   template: src=keepalived.conf.j2 dest=/etc/keepalived/keepalived.conf owner=root group=root mode=0644
   notify:
-    - restart keepalved
+    - restart keepalived
   
 - copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0755
   with_items:
