@@ -11,5 +11,5 @@
 - name: copy lizard rpm to nodes
   copy: src={{ item }} dest=/usr/local/src/
   with_fileglob:
-    - /vagrant/lizardfs_el7/lizardfs*.rpm
+    - "{{ lizardfs_rpm_location }}"
 
