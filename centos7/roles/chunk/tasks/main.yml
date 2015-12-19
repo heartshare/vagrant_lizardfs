@@ -1,5 +1,7 @@
-- name: apt update and install lizardfs-chunkserver
-  apt: name=lizardfs-chunkserver update_cache=no
+- name: install lizardfs-chunkserver
+  yum: name={{ item }}
+  with_fileglob:
+    - /usr/local/src/lizardfs-chunkserver*
 
 - name: chunk cfg file
   copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644

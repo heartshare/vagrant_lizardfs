@@ -1,5 +1,7 @@
-- name: apt update and install lizardfs-client
-  apt: name=lizardfs-client update_cache=no
+- name: install lizardfs-client
+  yum: name={{ item }}
+  with_fileglob:
+    - /usr/local/src/lizardfs-client*
 
 - name: /mnt/lizardfs dir
   file: path=/mnt/lizardfs state=directory

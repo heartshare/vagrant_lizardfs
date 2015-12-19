@@ -1,5 +1,7 @@
-- name: apt update and install lizardfs-cgiserv
-  apt: name=lizardfs-cgiserv update_cache=no
+- name: install lizardfs-cgiserv
+  yum: name={{ item }}
+  with_fileglob:
+    - /usr/local/src/lizardfs-cgi*
 
 - name: cgi cfg file
   copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
