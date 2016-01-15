@@ -44,15 +44,18 @@ EOF
 mkdir -p /etc/pdsh
 grep 10.0. /etc/hosts | awk '{print $2}' > /etc/pdsh/machines
 
-#./build_lizardfs_rpm.sh
-#./build_pdsh_rpm.sh
-
 ssh-keygen -t rsa
 for i in `grep 10.0.15 /etc/hosts | awk '{print $2}'`; do
     ssh-keyscan $i;
 done > ~/.ssh/known_hosts
 
-ansible-playbook ssh_key.yml --ask-pass 
+ansible-playbook ssh_key.yml --ask-pass
+
+./build_pdsh_rpm.sh
+./build_lizardfs_rpm.sh
+
+
+
 
 
 
