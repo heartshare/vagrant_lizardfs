@@ -44,6 +44,7 @@ EOF
 mkdir -p /etc/pdsh
 grep 10.0. /etc/hosts | awk '{print $2}' > /etc/pdsh/machines
 
+#./build_lizardfs_rpm.sh
 #./build_pdsh_rpm.sh
 
 ssh-keygen -t rsa
